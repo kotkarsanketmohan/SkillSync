@@ -11,7 +11,7 @@ The technology landscape evolves at lightning speed, but academic curriculums of
 
 ## 💡 The Solution
 
-SkillSync leverages advanced Large Language Models (LLMs) to perform deep semantic analysis of syllabuses and job descriptions. It solves the problem through three dedicated portals:
+SkillSync leverages advanced proprietary analysis algorithms and semantic intelligence to bridge the gap. It solves the problem through three dedicated portals:
 
 * **🎓 University Portal**: Colleges can upload their entire 8-semester curriculum. SkillSync's AI compares it against current industry trends, identifies critical skill gaps, visualizes projected placement readiness, and generates complete, downloadable PDF Curriculum Intelligence Reports to aid in accreditation and syllabus updates.
 * **👨‍🎓 Student Portal**: Students can search for engineering colleges based on location and branch. Instead of relying on generic rankings, they receive AI-generated insights on how well a college's curriculum aligns with industry expectations.
@@ -33,10 +33,10 @@ SkillSync is built using a modern, scalable, and highly responsive architecture.
 - **SQLAlchemy (SQLite)**: ORM for robust data modeling and user profile management.
 - **JWT (JSON Web Tokens)**: Secure authentication and role-based access control.
 
-### **AI & Data Intelligence**
-- **Groq API**: Primary LLM inference engine providing near-instant structured JSON generation.
-- **Google Gemini**: Secondary fallback AI provider to ensure maximum uptime during quota limits.
-- **Cascading Fallback System**: A custom `ProviderManager` architecture that gracefully degrades from Groq -> Gemini -> Local Seed Data, guaranteeing users always receive a response.
+### **Core Intelligence Engine**
+- **Semantic Analysis**: Deep natural language processing algorithms to map academic syllabuses against live job market requirements.
+- **Skill-Matching Heuristics**: Advanced mathematical modeling to generate curriculum-industry match scores.
+- **Data Engineering**: A highly reliable backend data orchestrator that guarantees fast, asynchronous processing of complex curriculum datasets.
 
 ## ⚙️ Features & Highlights
 
@@ -51,7 +51,6 @@ SkillSync is built using a modern, scalable, and highly responsive architecture.
 ### Prerequisites
 - Python 3.9+
 - Node.js 18+
-- Groq / Gemini API Keys
 
 ### Backend Setup
 ```bash
@@ -78,4 +77,4 @@ npm run dev
 ```
 
 ---
-*Built with ❤️ to synchronize the future of education and industry.*
+
