@@ -1,0 +1,182 @@
+{
+  "institutions": [
+    {
+      "institution": "COEP Technological University",
+      "department": "Computer Engineering",
+      "provider": "seed",
+      "data_mode": "SEEDED_DATA",
+      "curriculum_analysis": {
+        "curriculum_alignment": "High",
+        "skill_gaps": [
+          "Advanced DevOps",
+          "Kubernetes"
+        ],
+        "subject_gaps": [
+          "Cloud Native Architecture"
+        ],
+        "placement_intelligence": {
+          "roles": [
+            "Software Engineer",
+            "DevOps Engineer"
+          ],
+          "covered_skills": [
+            "Java",
+            "Python",
+            "DSA",
+            "SQL"
+          ],
+          "missing_skills": [
+            "Kubernetes",
+            "CI/CD Pipelines"
+          ],
+          "projected_match": 85
+        },
+        "industry_alignment": [
+          {
+            "skill": "React.js",
+            "demand": 92,
+            "coverage": 40,
+            "gap": 52,
+            "priority": "High"
+          },
+          {
+            "skill": "Node.js",
+            "demand": 88,
+            "coverage": 30,
+            "gap": 58,
+            "priority": "High"
+          },
+          {
+            "skill": "AWS / Cloud",
+            "demand": 85,
+            "coverage": 50,
+            "gap": 35,
+            "priority": "Medium"
+          },
+          {
+            "skill": "Docker / Kubernetes",
+            "demand": 80,
+            "coverage": 20,
+            "gap": 60,
+            "priority": "High"
+          },
+          {
+            "skill": "CI/CD Pipelines",
+            "demand": 75,
+            "coverage": 45,
+            "gap": 30,
+            "priority": "Medium"
+          },
+          {
+            "skill": "SQL / Databases",
+            "demand": 90,
+            "coverage": 80,
+            "gap": 10,
+            "priority": "Low"
+          }
+        ]
+      },
+      "semesters": [
+        {
+          "semester": 1,
+          "subjects": [
+            {
+              "course_code": "CE101",
+              "course_name": "Programming Fundamentals",
+              "credits": 4,
+              "skills": [
+                "C Programming"
+              ]
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "course_name": "Cloud Native Architecture",
+          "reason": "High demand",
+          "details": {
+            "credits": 3,
+            "topics": [
+              "Docker",
+              "Kubernetes"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "institution": "Pune Institute of Computer Technology (PICT)",
+      "department": "Computer Engineering",
+      "provider": "seed",
+      "data_mode": "SEEDED_DATA",
+      "curriculum_analysis": {
+        "curriculum_alignment": "High",
+        "skill_gaps": [
+          "System Design",
+          "React Native"
+        ],
+        "subject_gaps": [
+          "Advanced Front-end Development"
+        ],
+        "placement_intelligence": {
+          "roles": [
+            "Full Stack Developer",
+            "Backend Engineer"
+          ],
+          "covered_skills": [
+            "Java",
+            "Python",
+            "C++",
+            "Algorithms"
+          ],
+          "missing_skills": [
+            "System Design At Scale"
+          ],
+          "projected_match": 88
+        },
+        "industry_alignment": [
+          {
+            "skill": "System Design",
+            "demand": 95,
+            "coverage": 50,
+            "gap": 45,
+            "priority": "High"
+          },
+          {
+            "skill": "React Native",
+            "demand": 85,
+            "coverage": 25,
+            "gap": 60,
+            "priority": "High"
+          },
+          {
+            "skill": "GraphQL",
+            "demand": 78,
+            "coverage": 15,
+            "gap": 63,
+            "priority": "High"
+          }
+        ]
+      },
+      "semesters": [],
+      "recommendations": []
+    },
+    {
+      "institution": "Pimpri Chinchwad College of Engineering (PCCOE)",
+      "department": "Computer Engineering"
+    },
+    {
+      "institution": "Vishwakarma Institute of Technology (VIT)",
+      "department": "Computer Engineering"
+    },
+    {
+      "institution": "Veermata Jijabai Technological Institute (VJTI)",
+      "department": "Computer Engineering"
+    },
+    {
+      "institution": "D.Y. Patil College of Engineering, Akurdi (DYPCOE)",
+      "department": "Computer Engineering"
+    }
+  ]
+}

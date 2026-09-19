@@ -1,0 +1,14 @@
+{
+    "companies": [
+        {
+            "company_name": "Infosys",
+            "career_url": "https://career.infosys.com/joblist",
+            "enabled": true
+        },
+        {
+            "company_name": "TCS",
+            "career_url": "https://www.tcs.com/careers",
+            "enabled": true
+        }
+    ]
+}

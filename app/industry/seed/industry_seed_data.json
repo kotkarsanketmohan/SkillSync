@@ -1,0 +1,30 @@
+{
+  "companies": [
+    {
+      "company": "Test Company",
+      "role": "Software Engineer",
+      "required_skills": [
+        "Java",
+        "Spring Boot",
+        "REST API",
+        "SQL"
+      ],
+      "provider": "seed",
+      "data_mode": "SEEDED_DATA",
+      "matches": [
+        {
+          "college_name": "Pune Institute of Computer Technology (PICT)",
+          "matching_score": 95
+        },
+        {
+          "college_name": "College of Engineering Pune (COEP)",
+          "matching_score": 92
+        },
+        {
+          "college_name": "Vishwakarma Institute of Technology (VIT)",
+          "matching_score": 85
+        }
+      ]
+    }
+  ]
+}
