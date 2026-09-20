@@ -31,7 +31,7 @@ City: {", ".join(cities)}
 State: {state}
 Branch: {branch}
 
-For each relevant engineering college, you must extract and estimate the following information. You MUST generate data for EXACTLY 5 realistic engineering colleges matching the criteria. Do not return less than 5 colleges!
+For each relevant engineering college, you must extract and estimate the following information. You MUST generate data for a random number of realistic engineering colleges matching the criteria, between 7 and 15 colleges (e.g., 8, 11, 14, etc.). Do not return less than 7 colleges!
 Provide realistic data. For example, if the city is Pune, ensure top-tier colleges like COEP, PICT, VIT, PCCOE, Cummins, and DYPCOE are included and ranked appropriately above lower-tier options.
 
 Provide the following JSON structure:

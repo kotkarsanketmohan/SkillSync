@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 class ProviderManager:
     @staticmethod
     def _check_cache(filters: dict) -> Optional[dict]:
+        import os
+        if os.getenv("DISABLE_AI_CACHE", "false").lower() == "true":
+            return None
+            
         db = SessionLocal()
         try:
             threshold = datetime.utcnow() - timedelta(hours=24)
