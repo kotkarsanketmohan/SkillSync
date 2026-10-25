@@ -58,3 +58,12 @@ def check_analyze_status(job_id: str, current_user: User = Depends(require_unive
         "result_data": job.result_data,
         "error_message": job.error_message
     }
+
+class CoursePlanRequest(BaseModel):
+    course_name: str
+    mode: str
+
+@router.post("/course-plan")
+def generate_course_plan(request: CoursePlanRequest, current_user: User = Depends(require_university), db: Session = Depends(get_db)):
+    result = ProviderManager.get_course_plan(request.course_name, request.mode)
+    return result

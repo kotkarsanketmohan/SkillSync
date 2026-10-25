@@ -14,33 +14,8 @@ logger = logging.getLogger(__name__)
 class ProviderManager:
     @staticmethod
     def _check_cache(filters: dict) -> Optional[dict]:
-        import os
-        if os.getenv("DISABLE_AI_CACHE", "false").lower() == "true":
-            return None
-            
-        db = SessionLocal()
-        try:
-            threshold = datetime.utcnow() - timedelta(hours=24)
-            query = db.query(SearchJob).filter(
-                SearchJob.status == "COMPLETED",
-                SearchJob.created_at >= threshold
-            )
-            for k, v in filters.items():
-                query = query.filter(getattr(SearchJob, k) == v)
-                
-            job = query.order_by(SearchJob.created_at.desc()).first()
-            
-            if job and job.result_data:
-                try:
-                    data = json.loads(job.result_data)
-                    logger.info("Cache hit for search job.")
-                    data["provider"] = data.get("provider", "UNKNOWN") + " (CACHED)"
-                    return data
-                except Exception as e:
-                    logger.error(f"Error parsing cached data: {e}")
-            return None
-        finally:
-            db.close()
+        # Caching disabled to prevent database/parsing errors
+        return None
 
     @staticmethod
     def get_student_search_result(cities: List[str], state: str, branch: str) -> dict:
@@ -178,6 +153,38 @@ class ProviderManager:
             "generated_at": datetime.utcnow().isoformat(),
             "matches": []
         }
+
+    @staticmethod
+    def get_course_plan(course_name: str, mode: str) -> dict:
+        from app.ai.groq_service import generate_groq_course_plan
+        from app.ai.gemini_service import generate_ai_course_plan
+        from app.university.seed.university_seed import get_seed_course_plan
+        
+        if settings.AI_PROVIDER in ["auto", "groq"]:
+            try:
+                logger.info("[AI] module=course_plan provider=groq status=attempting")
+                result = generate_groq_course_plan(course_name, mode)
+                if result:
+                    logger.info("[AI] module=course_plan provider=groq status=success")
+                    return result
+            except Exception as e:
+                logger.error(f"[AI] module=course_plan provider=groq status=error reason={e}")
+
+        if settings.AI_PROVIDER in ["auto", "gemini"]:
+            try:
+                logger.info("[AI] module=course_plan provider=gemini status=attempting")
+                result = generate_ai_course_plan(course_name, mode, fallback_used=True)
+                if result:
+                    logger.info("[AI] module=course_plan provider=gemini status=success")
+                    return result
+            except Exception as e:
+                logger.error(f"[AI] module=course_plan provider=gemini status=error reason={e}")
+
+        logger.info("[AI] module=course_plan provider=seed status=attempting")
+        seed_result = get_seed_course_plan(course_name, mode)
+        logger.info("[AI] module=course_plan provider=seed status=success")
+        return seed_result
+
 
     @staticmethod
     def run_search_job_background(job_id: str, **kwargs):

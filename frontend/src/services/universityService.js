@@ -34,7 +34,7 @@ export const universityService = {
           // For MVP, we can return it.
           const analysisData = JSON.parse(statusRes.data.result_data);
           sessionStorage.setItem('universityAnalysisData', statusRes.data.result_data);
-          return analysisData;
+          return await universityService.getCurriculumAnalysis();
         } else if (statusRes.data.status === 'FAILED') {
           throw new Error(statusRes.data.error_message || "Analysis job failed");
         }
@@ -59,7 +59,9 @@ export const universityService = {
         demoData.high_priority_subjects = analysis.subject_gaps ? analysis.subject_gaps.length : demoData.high_priority_subjects;
         demoData.job_roles_covered = analysis.placement_intelligence?.roles?.length || demoData.job_roles_covered;
         demoData.placement_readiness = analysis.placement_intelligence?.projected_match || demoData.placement_readiness;
-        demoData.overall_alignment = analysis.curriculum_alignment === 'High' ? 85 : (analysis.curriculum_alignment === 'Medium' ? 65 : demoData.overall_alignment);
+        demoData.overall_alignment = typeof analysis.curriculum_alignment === 'number' 
+            ? analysis.curriculum_alignment 
+            : (analysis.curriculum_alignment === 'High' ? 85 : (analysis.curriculum_alignment === 'Medium' ? 65 : demoData.overall_alignment));
 
         // Inject real semesters and subjects if available
         if (parsed.semesters && parsed.semesters.length > 0) {
@@ -189,6 +191,7 @@ export const universityService = {
             const template = demoData[index % demoData.length];
             return {
                 ...template,
+                ...rec,
                 target: rec.course_name || rec.target || template.target,
                 why: rec.reason || rec.why || template.why,
                 id: rec.id || `rec-${index}`
@@ -199,37 +202,84 @@ export const universityService = {
   },
 
   getCoursePlan: async (type, recommendation) => {
-    // Determine ID based on type for the demo adapter
-    const id = type === 'MODIFY_EXISTING' ? 1 : 2;
-    const plan = await universityDemoAdapter.getCoursePlan(id, type);
-    
-    // Inject dynamic recommendation data if navigated from the recommendations tab
-    // Or if we don't have a specific recommendation, we fetch the top recommendation for that type
-    let targetRec = recommendation;
-    if (!targetRec) {
-        const recs = await universityService.getRecommendations();
-        targetRec = recs.find(r => r.type === type) || recs[0];
-    }
-
-    if (targetRec && plan) {
-        plan.course_name = targetRec.target || plan.course_name;
-        plan.semester = targetRec.semester || plan.semester;
-        plan.placement_impact = targetRec.placement_relevance || plan.placement_impact;
+    if (isDemo) {
+        const id = type === 'MODIFY_EXISTING' ? 1 : 2;
+        const plan = await universityDemoAdapter.getCoursePlan(id, type);
         
-        if (plan.type === 'MODIFY') {
-            plan.improvement = parseInt(targetRec.improvement) || plan.improvement;
-            plan.proposed_alignment = plan.current_alignment + plan.improvement;
-            if (targetRec.why) {
-                plan.add = [targetRec.why.substring(0, 40) + '...'];
-            }
-        } else if (plan.type === 'NEW') {
-            if (targetRec.prerequisites) {
-                plan.prerequisites = targetRec.prerequisites;
+        let targetRec = recommendation;
+        if (!targetRec) {
+            const recs = await universityService.getRecommendations();
+            targetRec = recs.find(r => r.type === type) || recs[0];
+        }
+
+        if (targetRec && plan) {
+            plan.course_name = targetRec.target || plan.course_name;
+            plan.semester = targetRec.semester || plan.semester;
+            plan.placement_impact = targetRec.placement_relevance || plan.placement_impact;
+            
+            if (plan.type === 'MODIFY') {
+                plan.improvement = parseInt(targetRec.improvement) || plan.improvement;
+                plan.proposed_alignment = plan.current_alignment + plan.improvement;
+                if (targetRec.why) {
+                    plan.add = [targetRec.why.substring(0, 40) + '...'];
+                }
+            } else if (plan.type === 'NEW') {
+                if (targetRec.prerequisites) {
+                    plan.prerequisites = targetRec.prerequisites;
+                }
             }
         }
+        return plan;
     }
-    
-    return plan;
+
+    try {
+        let targetRec = recommendation;
+        if (!targetRec) {
+            const recs = await universityService.getRecommendations();
+            targetRec = recs.find(r => r.type === type) || recs[0];
+        }
+        const courseName = targetRec ? targetRec.target : "Unknown Course";
+        
+        const id = type === 'MODIFY_EXISTING' ? 1 : 2;
+        const demoPlan = await universityDemoAdapter.getCoursePlan(id, type);
+
+        const res = await api.post('/api/university/course-plan', {
+            course_name: courseName,
+            mode: type
+        });
+        
+        const aiPlan = res.data;
+        
+        return {
+            ...demoPlan,
+            ...aiPlan,
+            type: aiPlan.type || demoPlan.type,
+            course_name: aiPlan.course_name || targetRec?.target || demoPlan.course_name,
+            semester: aiPlan.semester || targetRec?.semester || demoPlan.semester,
+            current_alignment: aiPlan.current_alignment || demoPlan.current_alignment,
+            proposed_alignment: aiPlan.proposed_alignment || demoPlan.proposed_alignment,
+            improvement: aiPlan.improvement || demoPlan.improvement,
+            prerequisites: aiPlan.prerequisites || demoPlan.prerequisites,
+            retain: aiPlan.retain || demoPlan.retain,
+            update: aiPlan.update || demoPlan.update,
+            add: aiPlan.add || demoPlan.add,
+            remove: aiPlan.remove || demoPlan.remove,
+            cos: aiPlan.cos || demoPlan.cos,
+            units: (aiPlan.units && aiPlan.units.length > 0) ? aiPlan.units.map((u, i) => {
+                const baseUnits = demoPlan.units || [{}];
+                const baseUnit = baseUnits[i % baseUnits.length] || {};
+                return {
+                    ...baseUnit,
+                    ...u,
+                    topics: u.topics || u.modules || baseUnit.topics || []
+                };
+            }) : (demoPlan.units || [])
+        };
+    } catch (e) {
+        console.error("Error generating course plan:", e);
+        const id = type === 'MODIFY_EXISTING' ? 1 : 2;
+        return universityDemoAdapter.getCoursePlan(id, type);
+    }
   },
 
   getCOPOMapping: async () => {

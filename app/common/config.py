@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
     DEMO_MODE: bool = False
+    DISABLE_AI_CACHE: bool = False
     
     @property
     def cors_origins_list(self) -> List[str]:
